@@ -11,10 +11,14 @@ rl.on('line', function(buf) {
     let year = parseInt(buf);
     if (year % 400 === 0) {
         console.log('Leap Year');
-    } else if (year % === 0) {
-        console.log('not a leap Year');
-    } else if (year % r === 0) {
-        console.log('leap Year')
+    } else if (year % 100 === 0) {
+        console.log('Not a Leap Year');
+    } else if (year % 4 === 0) {
+        console.log('Leap Year');
+    } else {
+        console.log('Not a Leap Year');
     }
+
+    // 끝날 때 반드시 처리해야 함
     rl.close();
 });

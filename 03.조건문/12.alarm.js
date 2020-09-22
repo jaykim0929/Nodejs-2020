@@ -1,5 +1,6 @@
 const readline = require('readline');
-const rl = readline.createInterfac({
+const rl = readline.createInterface({
+    input: process.stdin,
     output: process.stdout
 });
 rl.setPrompt('시:분 입력> ');
@@ -18,8 +19,8 @@ rl.on('line', function(buf) {
         newHour = hour;
         newMin = minute - 45;
     }
-    console.log(`새로운 알람 시각 - ${newHour}:${newMin > 9 ? newMin : '0' +newMin}`)
+    console.log(`새로운 알람 시각 - ${newHour}:${newMin > 9 ? newMin : '0'+newMin}`);
     
-    //끝날때 반드시 처리해야 함
+    // 끝날 때 반드시 처리해야 함
     rl.close();
 });
