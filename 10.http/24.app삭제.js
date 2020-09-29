@@ -79,41 +79,6 @@ http.createServer(function(req, res) {
             });
         });
         break;
-    case '/update':
-        fs.readdir('data', function(error, filelist) {
-            let list = template.listGen(filelist);
-            let title = query.id;
-            let control = template.buttonGen();
-            let filename = 'data/' + title + '.txt';
-            fs.readFile(filename, 'utf8', (error, buffer) => {
-                let content = template.updateForm(title, buffer);
-                let html = view.index(`${title} 수정`, list, content, control);
-                res.end(html);
-            });
-        });
-        break;
-    case '/update_proc':
-        body = '';
-        req.on('data', function(data) {
-            body += data;
-        })
-        req.on('end', function() {
-            let param = qs.parse(body);
-            //console.log(param.original, param.subject, param.description);
-            let filepath = 'data/' + param.original + '.txt';
-            fs.writeFile(filepath, param.description, error => {
-                if (param.original !== param.subject) {
-                    fs.rename(filepath, `data/${param.subject}.txt`, error => {
-                        res.writeHead(302, {'Location': `/?id=${param.subject}`});
-                        res.end();
-                    });
-                } else {
-                    res.writeHead(302, {'Location': `/?id=${param.subject}`});
-                    res.end();
-                }
-            });
-        });
-        break;    
     default:
         res.writeHead(404);
         res.end();

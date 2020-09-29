@@ -35,14 +35,14 @@ http.createServer(function(req, res) {
     case '/create':
         fs.readdir('data', function(error, filelist) {
             let list = template.listGen(filelist);
-            let content = template.createForm();
+            let content = template.createForm;
             let control = template.buttonGen();
             let html = view.index('글 생성', list, content, control);
             res.end(html);
         });
         break;
     case '/create_proc':
-        body = '';
+        let body = '';
         req.on('data', function(data) {
             body += data;
         })
@@ -56,64 +56,6 @@ http.createServer(function(req, res) {
             });
         });
         break;
-    case '/delete':
-        fs.readdir('data', function(error, filelist) {
-            let list = template.listGen(filelist);
-            let content = template.deleteForm(query.id);
-            let control = template.buttonGen();
-            let html = view.index('글 삭제', list, content, control);
-            res.end(html);
-        });
-        break;
-    case '/delete_proc': 
-        body = '';
-        req.on('data', function(data) {
-            body += data;
-        })
-        req.on('end', function() {
-            let param = qs.parse(body);
-            let filepath = 'data/' + param.subject + '.txt';
-            fs.unlink(filepath, error => {
-                res.writeHead(302, {'Location': '/'});
-                res.end();
-            });
-        });
-        break;
-    case '/update':
-        fs.readdir('data', function(error, filelist) {
-            let list = template.listGen(filelist);
-            let title = query.id;
-            let control = template.buttonGen();
-            let filename = 'data/' + title + '.txt';
-            fs.readFile(filename, 'utf8', (error, buffer) => {
-                let content = template.updateForm(title, buffer);
-                let html = view.index(`${title} 수정`, list, content, control);
-                res.end(html);
-            });
-        });
-        break;
-    case '/update_proc':
-        body = '';
-        req.on('data', function(data) {
-            body += data;
-        })
-        req.on('end', function() {
-            let param = qs.parse(body);
-            //console.log(param.original, param.subject, param.description);
-            let filepath = 'data/' + param.original + '.txt';
-            fs.writeFile(filepath, param.description, error => {
-                if (param.original !== param.subject) {
-                    fs.rename(filepath, `data/${param.subject}.txt`, error => {
-                        res.writeHead(302, {'Location': `/?id=${param.subject}`});
-                        res.end();
-                    });
-                } else {
-                    res.writeHead(302, {'Location': `/?id=${param.subject}`});
-                    res.end();
-                }
-            });
-        });
-        break;    
     default:
         res.writeHead(404);
         res.end();
